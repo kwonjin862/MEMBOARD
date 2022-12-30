@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+	
+	<!-- 게시글 등록 -->
+	<insert id="bWrite" parameterType="board">
+		INSERT INTO BOARDT VALUES(BT_SEQ.NEXTVAL, #{boWriter}, #{boTitle}, #{boContent}, SYSDATE, 0, #{boFileName})
+	</insert>
+	
+	<!-- 게시글 갯수 확인 -->
+	<select id="bCount" resultType="int">
+		SELECT COUNT(*) FROM BOARDT
+	</select>
+	
+	<!-- 페이징 처리 -->
+	<select id="bList" parameterType="paging" resultType="board">
+		SELECT * FROM BOARDTLIST WHERE RN BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="bHit" parameterType="int">
+		UPDATE BOARDT SET BOHIT = BOHIT + 1 WHERE BONUM = #{boNum}
+	</update>
+	
+	<!-- 게시글 상세보기 -->
+	<select id="bView" parameterType="int" resultType="board">
+		SELECT * FROM BOARDT WHERE BONUM = #{boNum}
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="bModify" parameterType="board">
+		UPDATE BOARDT SET BOWRITER = #{boWriter}, BOTITLE = #{boTitle}, BOCONTENT = #{boContent},
+		BOFILENAME = #{boFileName, jdbcType=VARCHAR} WHERE BONUM = #{boNum}
+	</update>
+	
+	
+	<!-- 게시글 삭제 -->
+	<delete id="bDelete" parameterType="int">
+		DELETE FROM BOARDT WHERE BONUM = #{boNum}
+	</delete>
+	
+	<!-- category 사용법 수정하기! -->
+	<select id="bSearch" parameterType="search" resultType="board">
+		SELECT * FROM BOARDT WHERE ${category} LIKE '%'||#{keyword}||'%'
+		
+	</select>
+</mapper>
+
+
+
+
+
